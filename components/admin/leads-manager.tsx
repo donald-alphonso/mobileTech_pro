@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase, type Lead } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, type Lead } from '@/lib/supabase';
 import { Search, Mail, Phone, Eye, Calendar, Filter } from 'lucide-react';
 
 export function LeadsManager() {
@@ -21,6 +21,10 @@ export function LeadsManager() {
   }, []);
 
   const fetchLeads = async () => {
+    if (!isSupabaseConfigured() || !supabase) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from('leads')
@@ -37,10 +41,14 @@ export function LeadsManager() {
   };
 
   const updateLeadStatus = async (leadId: number, newStatus: string) => {
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
     try {
       const { error } = await supabase
         .from('leads')
-        .update({ 
+        .update({
           status: newStatus,
           updated_at: new Date().toISOString()
         })

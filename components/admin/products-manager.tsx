@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { supabase, type Product } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, type Product } from '@/lib/supabase';
 import { Plus, Search, Edit, Trash2, Eye, Star } from 'lucide-react';
 import { ProductForm } from './product-form';
 
@@ -21,6 +21,10 @@ export function ProductsManager() {
   }, []);
 
   const fetchProducts = async () => {
+    if (!isSupabaseConfigured() || !supabase) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from('products')
@@ -39,6 +43,11 @@ export function ProductsManager() {
   const handleDelete = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
 
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('products')
@@ -53,6 +62,10 @@ export function ProductsManager() {
   };
 
   const handleToggleFeatured = async (product: Product) => {
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
     try {
       const { error } = await supabase
         .from('products')

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { Package, Users, ShoppingCart, TrendingUp, Eye, Star } from 'lucide-react';
 
 interface Stats {
@@ -30,6 +30,10 @@ export function DashboardStats() {
   }, []);
 
   const fetchStats = async () => {
+    if (!isSupabaseConfigured() || !supabase) {
+      setIsLoading(false);
+      return;
+    }
     try {
       // Statistiques des produits
       const { data: products } = await supabase

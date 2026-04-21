@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase, type Category, type Brand } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, type Category, type Brand } from '@/lib/supabase';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 
 export function CategoriesManager() {
@@ -14,7 +14,7 @@ export function CategoriesManager() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [editingBrand, setBrand] = useState<Brand | null>(null);
+  const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
   const [showBrandForm, setShowBrandForm] = useState(false);
 
@@ -37,6 +37,10 @@ export function CategoriesManager() {
   }, []);
 
   const fetchData = async () => {
+    if (!isSupabaseConfigured() || !supabase) {
+      setIsLoading(false);
+      return;
+    }
     try {
       const [categoriesResult, brandsResult] = await Promise.all([
         supabase.from('categories').select('*').order('name'),
@@ -61,7 +65,12 @@ export function CategoriesManager() {
 
   const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     try {
       const slug = categoryForm.slug || generateSlug(categoryForm.name);
       const data = { ...categoryForm, slug };
@@ -88,7 +97,12 @@ export function CategoriesManager() {
 
   const handleBrandSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     try {
       const slug = brandForm.slug || generateSlug(brandForm.name);
       const data = { ...brandForm, slug };
@@ -121,7 +135,7 @@ export function CategoriesManager() {
 
   const resetBrandForm = () => {
     setBrandForm({ name: '', slug: '', logo: '' });
-    setBrand(null);
+    setEditingBrand(null);
     setShowBrandForm(false);
   };
 
@@ -143,13 +157,18 @@ export function CategoriesManager() {
       slug: brand.slug,
       logo: brand.logo || ''
     });
-    setBrand(brand);
+    setEditingBrand(brand);
     setShowBrandForm(true);
   };
 
   const deleteCategory = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) return;
-    
+
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('categories')
@@ -164,7 +183,12 @@ export function CategoriesManager() {
 
   const deleteBrand = async (id: number) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette marque ?')) return;
-    
+
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('brands')

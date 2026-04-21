@@ -4,29 +4,40 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminDashboard } from '@/components/admin/admin-dashboard';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { ROUTES } from '@/lib/routes';
 
 export default function AdminPage() {
   const [checking, setChecking] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
+    let cancelled = false;
+
     const checkAuth = async () => {
-      if (isSupabaseConfigured() && supabase) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          router.push('/admin/login');
-          return;
-        }
-      } else {
-        if (!sessionStorage.getItem('admin_authed')) {
-          router.push('/admin/login');
-          return;
-        }
+      if (!isSupabaseConfigured() || !supabase) {
+        router.push(ROUTES.adminLogin);
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
+      if (!session) {
+        router.push(ROUTES.adminLogin);
+        return;
       }
       setChecking(false);
     };
 
     checkAuth();
+
+    const { data: subscription } = supabase?.auth.onAuthStateChange((_event, session) => {
+      if (!session) router.push(ROUTES.adminLogin);
+    }) ?? { data: null };
+
+    return () => {
+      cancelled = true;
+      subscription?.subscription.unsubscribe();
+    };
   }, [router]);
 
   if (checking) {

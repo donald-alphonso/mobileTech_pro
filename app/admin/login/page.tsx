@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,43 +11,36 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Smartphone, Lock } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { adminLoginSchema, type AdminLoginValues } from '@/lib/validators';
+import { ROUTES } from '@/lib/routes';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const router = useRouter();
+  const [error, setError] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<AdminLoginValues>({
+    resolver: zodResolver(adminLoginSchema),
+    defaultValues: { email: '', password: '' },
+  });
+
+  const onSubmit = async ({ email, password }: AdminLoginValues) => {
     setError('');
 
-    try {
-      if (isSupabaseConfigured() && supabase) {
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-        if (authError) {
-          setError('Email ou mot de passe incorrect');
-          return;
-        }
-        router.push('/admin');
-      } else {
-        // Fallback sans Supabase : vérification via variables d'env
-        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-        if (email === adminEmail && password === adminPassword) {
-          sessionStorage.setItem('admin_authed', 'true');
-          router.push('/admin');
-        } else {
-          setError('Email ou mot de passe incorrect');
-        }
-      }
-    } catch {
-      setError('Erreur de connexion');
-    } finally {
-      setIsLoading(false);
+    if (!isSupabaseConfigured() || !supabase) {
+      setError("L'authentification n'est pas configurée. Contactez l'administrateur.");
+      return;
     }
+
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    if (authError) {
+      setError('Email ou mot de passe incorrect');
+      return;
+    }
+    router.push(ROUTES.admin);
   };
 
   return (
@@ -63,36 +58,40 @@ export default function AdminLoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="username"
                 placeholder="Votre email admin"
-                required
+                {...register('email')}
               />
+              {errors.email && (
+                <p className="text-sm text-red-600">{errors.email.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Mot de passe</Label>
               <Input
                 id="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 placeholder="••••••••"
-                required
+                {...register('password')}
               />
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                   Connexion...

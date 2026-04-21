@@ -6,6 +6,7 @@ import { supabase, isSupabaseConfigured, type Product } from '@/lib/supabase';
 import { Star, Heart, Grid3x3 as Grid3X3, List, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { productPath } from '@/lib/routes';
 
 interface ProductGridProps {
   filters?: {
@@ -13,6 +14,7 @@ interface ProductGridProps {
     brands: string[];
     priceRange: number[];
     inStockOnly: boolean;
+    searchQuery?: string;
   };
 }
 
@@ -126,6 +128,15 @@ export function ProductGrid({ filters }: ProductGridProps) {
       if (filters.inStockOnly) {
         filtered = filtered.filter(product => product.in_stock);
       }
+
+      // Filter by search query (name + brand)
+      const q = filters.searchQuery?.trim().toLowerCase();
+      if (q) {
+        filtered = filtered.filter(product =>
+          product.name.toLowerCase().includes(q) ||
+          product.brand.toLowerCase().includes(q)
+        );
+      }
     }
     
     // Sort the filtered products
@@ -220,12 +231,12 @@ export function ProductGrid({ filters }: ProductGridProps) {
           {/* Actions */}
           <div className={`flex gap-2 ${viewMode === 'list' ? 'ml-4' : ''}`}>
             <Button asChild variant="outline" size="sm" className="flex-1" disabled={!product.in_stock}>
-              <Link href={`/produit/${product.slug}`}>
+              <Link href={productPath(product.slug)}>
                 Voir Détails
               </Link>
             </Button>
             <Button asChild size="sm" className="flex-1" disabled={!product.in_stock}>
-              <Link href={`/produit/${product.slug}#contact`}>
+              <Link href={`${productPath(product.slug)}#contact`}>
                 Contact
               </Link>
             </Button>

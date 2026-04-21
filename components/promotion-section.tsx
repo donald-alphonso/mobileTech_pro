@@ -1,11 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Clock, Percent, Gift, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ROUTES } from '@/lib/routes';
 
 export function PromotionSection() {
+  const [endDate] = useState<string>(() =>
+    new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+  );
+
   const promotions = [
     {
       id: 1,
@@ -13,7 +19,7 @@ export function PromotionSection() {
       description: 'Jusqu\'à 200€ de remise sur les iPhone 15',
       discount: '-200€',
       image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-      endDate: '2025-02-15',
+      endDate,
       isFlash: true
     },
     {
@@ -22,7 +28,7 @@ export function PromotionSection() {
       description: 'Coque + Verre trempé + Chargeur',
       discount: '-30%',
       image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
-      endDate: '2025-02-28',
+      endDate,
       isFlash: false
     }
   ];
@@ -129,7 +135,7 @@ export function PromotionSection() {
         {/* CTA */}
         <div className="text-center">
           <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-            <Link href="/catalogue">
+            <Link href={ROUTES.catalogue}>
               Voir Toutes les Promotions
             </Link>
           </Button>

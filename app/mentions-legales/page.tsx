@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb';
+import { ROUTES } from '@/lib/routes';
 
 export const metadata = {
   title: 'Mentions Légales - MobileTech Pro',
@@ -10,8 +11,8 @@ export default function MentionsLegalesPage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Mentions Légales', href: '/mentions-legales' }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'Mentions Légales', href: ROUTES.legal }
         ]} />
 
         <div className="max-w-4xl mx-auto">

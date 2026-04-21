@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb';
+import { ROUTES } from '@/lib/routes';
 
 export const metadata = {
   title: 'Conditions Générales de Vente - MobileTech Pro',
@@ -10,8 +11,8 @@ export default function CGVPage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'CGV', href: '/cgv' }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'CGV', href: ROUTES.cgv }
         ]} />
 
         <div className="max-w-4xl mx-auto">

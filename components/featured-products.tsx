@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Star, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ROUTES, productPath } from '@/lib/routes';
 
 export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -156,12 +157,12 @@ export function FeaturedProducts() {
                 {/* Actions */}
                 <div className="flex space-x-2">
                   <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link href={`/produit/${product.slug}`}>
+                    <Link href={productPath(product.slug)}>
                       Voir Détails
                     </Link>
                   </Button>
                   <Button asChild size="sm" className="flex-1">
-                    <Link href={`/produit/${product.slug}#contact`}>
+                    <Link href={`${productPath(product.slug)}#contact`}>
                       <ShoppingBag className="h-4 w-4 mr-1" />
                       Contact
                     </Link>
@@ -188,7 +189,7 @@ export function FeaturedProducts() {
         {products.length > 0 && (
         <div className="text-center">
           <Button asChild size="lg" variant="outline">
-            <Link href="/catalogue">
+            <Link href={ROUTES.catalogue}>
               Voir Tout le Catalogue
               <span className="ml-2">→</span>
             </Link>

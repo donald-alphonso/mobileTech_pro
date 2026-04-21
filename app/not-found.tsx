@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Chrome as Home, Search, Phone } from 'lucide-react';
+import { ROUTES } from '@/lib/routes';
 
 export default function NotFound() {
   return (
@@ -18,21 +19,21 @@ export default function NotFound() {
 
         <div className="space-y-4">
           <Button asChild size="lg" className="w-full">
-            <Link href="/">
+            <Link href={ROUTES.home}>
               <Home className="h-4 w-4 mr-2" />
               Retour à l'accueil
             </Link>
           </Button>
-          
+
           <Button asChild variant="outline" size="lg" className="w-full">
-            <Link href="/catalogue">
+            <Link href={ROUTES.catalogue}>
               <Search className="h-4 w-4 mr-2" />
               Voir le catalogue
             </Link>
           </Button>
-          
+
           <Button asChild variant="outline" size="lg" className="w-full">
-            <Link href="/contact">
+            <Link href={ROUTES.contact}>
               <Phone className="h-4 w-4 mr-2" />
               Nous contacter
             </Link>

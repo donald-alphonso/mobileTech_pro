@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Smartphone, Headphones, Battery, Shield } from 'lucide-react';
+import { catalogueWithCategory } from '@/lib/routes';
 
 export function ProductCategories() {
   const categories = [
@@ -10,7 +11,7 @@ export function ProductCategories() {
       description: 'iPhone, Samsung, Huawei et plus',
       icon: Smartphone,
       image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-      href: '/catalogue?category=smartphones',
+      href: catalogueWithCategory('smartphones'),
       count: '150+ modèles'
     },
     {
@@ -18,7 +19,7 @@ export function ProductCategories() {
       description: 'AirPods, écouteurs sans fil',
       icon: Headphones,
       image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
-      href: '/catalogue?category=ecouteurs',
+      href: catalogueWithCategory('ecouteurs'),
       count: '80+ références'
     },
     {
@@ -26,7 +27,7 @@ export function ProductCategories() {
       description: 'Chargeurs rapides, batteries externes',
       icon: Battery,
       image: 'https://images.pexels.com/photos/163117/phone-cell-phone-mobile-phone-163117.jpeg',
-      href: '/catalogue?category=chargeurs',
+      href: catalogueWithCategory('chargeurs'),
       count: '60+ produits'
     },
     {
@@ -34,7 +35,7 @@ export function ProductCategories() {
       description: 'Coques, verres trempés, étuis',
       icon: Shield,
       image: 'https://images.pexels.com/photos/1440722/pexels-photo-1440722.jpeg',
-      href: '/catalogue?category=protection',
+      href: catalogueWithCategory('coques'),
       count: '200+ modèles'
     }
   ];

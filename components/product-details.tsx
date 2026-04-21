@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { ROUTES } from '@/lib/routes';
 
 interface ProductDetailsProps {
   product: {
@@ -80,7 +81,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
       {/* Action Buttons */}
       <div className="flex space-x-3">
         <Button asChild size="lg" className="flex-1" disabled={!product.inStock}>
-          <Link href="/contact">
+          <Link href={ROUTES.contact}>
             <Phone className="h-4 w-4 mr-2" />
             Nous Contacter
           </Link>

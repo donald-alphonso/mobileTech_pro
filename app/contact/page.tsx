@@ -1,6 +1,7 @@
 import ContactForm from '@/components/contact-form';
 import { ContactInfo } from '@/components/contact-info';
 import { Breadcrumb } from '@/components/breadcrumb';
+import { ROUTES } from '@/lib/routes';
 
 export const metadata = {
   title: 'Contact - MobileTech Pro | Nous Contacter',
@@ -12,8 +13,8 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Contact', href: '/contact' }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'Contact', href: ROUTES.contact }
         ]} />
 
         <div className="mb-12">

@@ -5,11 +5,21 @@ import { RelatedProducts } from '@/components/related-products';
 import { Breadcrumb } from '@/components/breadcrumb';
 import ContactForm from '@/components/contact-form';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { ROUTES, productPath } from '@/lib/routes';
 
 interface ProductPageProps {
   params: {
     slug: string;
   };
+}
+
+export async function generateStaticParams() {
+  if (!isSupabaseConfigured() || !supabase) {
+    return [{ slug: 'iphone-15-pro-max' }, { slug: 'galaxy-s24-ultra' }];
+  }
+  const { data, error } = await supabase.from('products').select('slug');
+  if (error || !data) return [];
+  return data.map((p: { slug: string }) => ({ slug: p.slug }));
 }
 
 // Mock product data for when Supabase is not configured
@@ -19,6 +29,7 @@ const getMockProduct = (slug: string) => {
       id: 1,
       name: 'iPhone 15 Pro Max 256GB',
       brand: 'Apple',
+      category: 'smartphones',
       price: '1299€',
       originalPrice: '1399€',
       inStock: true,
@@ -58,6 +69,7 @@ const getMockProduct = (slug: string) => {
       id: 2,
       name: 'Samsung Galaxy S24 Ultra',
       brand: 'Samsung',
+      category: 'smartphones',
       price: '1179€',
       originalPrice: null,
       inStock: true,
@@ -118,6 +130,7 @@ async function getProduct(slug: string) {
       id: data.id,
       name: data.name,
       brand: data.brand,
+      category: data.category,
       price: `${data.price}€`,
       originalPrice: data.original_price ? `${data.original_price}€` : null,
       inStock: data.in_stock,
@@ -152,7 +165,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
       title: `${product.name} - ${product.brand}`,
       description: product.description,
       images: product.images,
-      type: 'product'
+      type: 'website'
     }
   };
 }
@@ -168,9 +181,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Catalogue', href: '/catalogue' },
-          { label: product.name, href: `/produit/${params.slug}` }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'Catalogue', href: ROUTES.catalogue },
+          { label: product.name, href: productPath(params.slug) }
         ]} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
@@ -201,7 +214,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Related Products */}
-        <RelatedProducts currentProductId={product.id} />
+        <RelatedProducts currentCategory={product.category} currentProductId={product.id} />
       </div>
     </div>
   );

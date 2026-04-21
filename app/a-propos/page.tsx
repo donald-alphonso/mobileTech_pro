@@ -2,6 +2,7 @@ import { TeamSection } from '@/components/team-section';
 import { CompanyValues } from '@/components/company-values';
 import { CompanyHistory } from '@/components/company-history';
 import { Breadcrumb } from '@/components/breadcrumb';
+import { ROUTES } from '@/lib/routes';
 
 export const metadata = {
   title: 'À Propos - MobileTech Pro | Notre Histoire & Équipe',
@@ -13,8 +14,8 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'À Propos', href: '/a-propos' }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'À Propos', href: ROUTES.about }
         ]} />
 
         <div className="mb-12">

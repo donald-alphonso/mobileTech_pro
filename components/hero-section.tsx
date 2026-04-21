@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Smartphone, Shield, Truck, Headphones as HeadphonesIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/lib/routes';
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -76,13 +77,13 @@ export function HeroSection() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
-                    <Link href="/catalogue">
+                    <Link href={ROUTES.catalogue}>
                       {slide.cta}
                       <ChevronRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
-                    <Link href="/contact">
+                    <Link href={ROUTES.contact}>
                       Demander un Devis
                     </Link>
                   </Button>

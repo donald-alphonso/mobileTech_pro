@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Smartphone, Lock } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -22,19 +23,25 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      // TODO: Implémenter l'authentification avec Supabase
-      // const { data, error } = await supabase.auth.signInWithPassword({
-      //   email,
-      //   password,
-      // });
-
-      // Simulation pour le développement
-      if (email === 'admin@mobiletech-pro.fr' && password === 'admin123') {
+      if (isSupabaseConfigured() && supabase) {
+        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        if (authError) {
+          setError('Email ou mot de passe incorrect');
+          return;
+        }
         router.push('/admin');
       } else {
-        setError('Email ou mot de passe incorrect');
+        // Fallback sans Supabase : vérification via variables d'env
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+        const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+        if (email === adminEmail && password === adminPassword) {
+          sessionStorage.setItem('admin_authed', 'true');
+          router.push('/admin');
+        } else {
+          setError('Email ou mot de passe incorrect');
+        }
       }
-    } catch (err) {
+    } catch {
       setError('Erreur de connexion');
     } finally {
       setIsLoading(false);
@@ -64,7 +71,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@mobiletech-pro.fr"
+                placeholder="Votre email admin"
                 required
               />
             </div>
@@ -98,11 +105,6 @@ export default function AdminLoginPage() {
               )}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-gray-600">
-            <p>Identifiants de test :</p>
-            <p>Email: admin@mobiletech-pro.fr</p>
-            <p>Mot de passe: admin123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

@@ -1,89 +1,76 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Mail, Phone, User, MessageSquare, Send, CircleCheck as CheckCircle } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
-
-interface ContactFormData {
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  product?: string;
-}
+import { contactFormSchema, type ContactFormValues } from '@/lib/validators';
 
 export default function ContactForm({ productName }: { productName?: string }) {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
+  const defaultValues: ContactFormValues = {
+    first_name: '',
+    last_name: '',
     email: '',
     phone: '',
     subject: productName ? `Demande d'information - ${productName}` : '',
     message: '',
-    product: productName || ''
+    contact_method: 'email',
+    product_name: productName ?? '',
+    website: '',
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const contactMethod = watch('contact_method');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const onSubmit = async (values: ContactFormValues) => {
+    // Honey-pot : si rempli, on simule un succès sans rien insérer
+    if (values.website) {
+      setSubmitStatus('success');
+      reset({ ...defaultValues });
+      return;
+    }
+
     setSubmitStatus('idle');
     setErrorMessage('');
 
     try {
-      if (isSupabaseConfigured) {
-        const { error } = await supabase
-          .from('leads')
-          .insert([
-            {
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              subject: formData.subject,
-              message: formData.message,
-              product: formData.product,
-              status: 'nouveau',
-              source: 'contact_form'
-            }
-          ]);
-
-        if (error) {
-          throw error;
-        }
+      if (isSupabaseConfigured() && supabase) {
+        const { website: _hp, ...payload } = values;
+        const { error } = await supabase.from('leads').insert([{ ...payload, status: 'new' }]);
+        if (error) throw error;
       } else {
-        // Simulation d'envoi pour la démo
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Formulaire soumis (mode démo):', formData);
+        await new Promise((r) => setTimeout(r, 800));
+        console.log('Mode demo, payload:', values);
       }
 
       setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: productName ? `Demande d'information - ${productName}` : '',
-        message: '',
-        product: productName || ''
-      });
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error);
+      reset({ ...defaultValues });
+    } catch (err) {
+      console.error(err);
       setSubmitStatus('error');
-      setErrorMessage('Une erreur est survenue lors de l\'envoi du message. Veuillez réessayer.');
-    } finally {
-      setIsSubmitting(false);
+      setErrorMessage("Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.");
     }
   };
 
@@ -95,10 +82,9 @@ export default function ContactForm({ productName }: { productName?: string }) {
           Contactez-nous
         </CardTitle>
         <CardDescription>
-          {productName 
+          {productName
             ? `Demandez des informations sur ${productName}`
-            : 'Nous sommes là pour répondre à toutes vos questions'
-          }
+            : 'Nous sommes là pour répondre à toutes vos questions'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -113,31 +99,60 @@ export default function ContactForm({ productName }: { productName?: string }) {
 
         {submitStatus === 'error' && (
           <Alert className="mb-6 border-red-200 bg-red-50">
-            <AlertDescription className="text-red-800">
-              {errorMessage}
-            </AlertDescription>
+            <AlertDescription className="text-red-800">{errorMessage}</AlertDescription>
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+          {/* Honey-pot invisible : les bots le remplissent, pas les humains */}
+          <input
+            type="text"
+            {...register('website')}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}
+          />
+
+          <input type="hidden" {...register('product_name')} />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="flex items-center gap-2">
+              <Label htmlFor="first_name" className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                Nom complet *
+                Prénom *
               </Label>
               <Input
-                id="name"
-                name="name"
+                id="first_name"
                 type="text"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                placeholder="Votre nom complet"
+                placeholder="Votre prénom"
                 className="w-full"
+                {...register('first_name')}
               />
+              {errors.first_name && (
+                <p className="text-sm text-red-600">{errors.first_name.message}</p>
+              )}
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="last_name" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Nom *
+              </Label>
+              <Input
+                id="last_name"
+                type="text"
+                placeholder="Votre nom"
+                className="w-full"
+                {...register('last_name')}
+              />
+              {errors.last_name && (
+                <p className="text-sm text-red-600">{errors.last_name.message}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
@@ -145,18 +160,14 @@ export default function ContactForm({ productName }: { productName?: string }) {
               </Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
                 placeholder="votre@email.com"
                 className="w-full"
+                {...register('email')}
               />
+              {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
@@ -164,45 +175,78 @@ export default function ContactForm({ productName }: { productName?: string }) {
               </Label>
               <Input
                 id="phone"
-                name="phone"
                 type="tel"
-                value={formData.phone}
-                onChange={handleInputChange}
                 placeholder="06 12 34 56 78"
                 className="w-full"
+                {...register('phone')}
               />
+              {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="subject">Sujet *</Label>
-              <Input
-                id="subject"
-                name="subject"
-                type="text"
-                value={formData.subject}
-                onChange={handleInputChange}
-                required
-                placeholder="Objet de votre demande"
-                className="w-full"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="subject">Sujet *</Label>
+            <Input
+              id="subject"
+              type="text"
+              placeholder="Objet de votre demande"
+              className="w-full"
+              {...register('subject')}
+            />
+            {errors.subject && <p className="text-sm text-red-600">{errors.subject.message}</p>}
+          </div>
+
+          <div className="space-y-3">
+            <Label>Mode de contact préféré *</Label>
+            <RadioGroup
+              value={contactMethod}
+              onValueChange={(v) =>
+                setValue('contact_method', v as ContactFormValues['contact_method'], {
+                  shouldValidate: true,
+                })
+              }
+              className="flex flex-col sm:flex-row gap-3"
+            >
+              <label
+                htmlFor="cm-email"
+                className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2 cursor-pointer hover:bg-gray-50 flex-1"
+              >
+                <RadioGroupItem value="email" id="cm-email" />
+                <span className="text-sm">Email</span>
+              </label>
+              <label
+                htmlFor="cm-phone"
+                className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2 cursor-pointer hover:bg-gray-50 flex-1"
+              >
+                <RadioGroupItem value="phone" id="cm-phone" />
+                <span className="text-sm">Téléphone</span>
+              </label>
+              <label
+                htmlFor="cm-both"
+                className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2 cursor-pointer hover:bg-gray-50 flex-1"
+              >
+                <RadioGroupItem value="both" id="cm-both" />
+                <span className="text-sm">Les deux</span>
+              </label>
+            </RadioGroup>
+            {errors.contact_method && (
+              <p className="text-sm text-red-600">{errors.contact_method.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="message">Message *</Label>
             <Textarea
               id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              required
               placeholder="Décrivez votre demande en détail..."
               className="min-h-[120px] w-full resize-none"
+              {...register('message')}
             />
+            {errors.message && <p className="text-sm text-red-600">{errors.message.message}</p>}
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isSubmitting}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
@@ -220,7 +264,7 @@ export default function ContactForm({ productName }: { productName?: string }) {
           </Button>
         </form>
 
-        {!isSupabaseConfigured && (
+        {!isSupabaseConfigured() && (
           <Alert className="mt-4 border-amber-200 bg-amber-50">
             <AlertDescription className="text-amber-800">
               Mode démo : Les messages sont affichés dans la console du navigateur.

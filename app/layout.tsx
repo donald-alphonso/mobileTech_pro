@@ -6,7 +6,10 @@ import { Footer } from '@/components/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mobiletech-pro.netlify.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'MobileTech Pro - Spécialiste Smartphones & Accessoires | Expert Mobile Paris',
   description: 'Découvrez notre gamme complète de smartphones dernière génération (iPhone, Samsung, Huawei) et accessoires premium. Conseil expert, garantie officielle, livraison rapide. 15 ans d\'expérience à Paris.',
   keywords: 'smartphone, téléphone portable, accessoires mobile, iPhone, Samsung, Huawei, coques, écouteurs',

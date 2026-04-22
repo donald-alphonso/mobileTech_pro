@@ -18,7 +18,7 @@ export function PromotionSection() {
       title: 'Offre Flash iPhone',
       description: 'Jusqu\'à 200€ de remise sur les iPhone 15',
       discount: '-200€',
-      image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
+      image: '/images/promotions/iphone-flash.jpg',
       endDate,
       isFlash: true
     },
@@ -27,7 +27,7 @@ export function PromotionSection() {
       title: 'Pack Accessoires',
       description: 'Coque + Verre trempé + Chargeur',
       discount: '-30%',
-      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
+      image: '/images/promotions/pack-accessoires.jpg',
       endDate,
       isFlash: false
     }
@@ -76,7 +76,9 @@ export function PromotionSection() {
               className="relative overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
               <div className="absolute inset-0">
-                <div 
+                <div
+                  role="img"
+                  aria-label={promo.title}
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
                   style={{ backgroundImage: `url(${promo.image})` }}
                 />

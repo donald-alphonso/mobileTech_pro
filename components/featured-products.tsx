@@ -31,7 +31,7 @@ export function FeaturedProducts() {
             description: 'Le nouveau iPhone 15 Pro Max offre des performances exceptionnelles.',
             features: ['Écran Super Retina XDR 6,7"', 'Puce A17 Pro ultra-rapide'],
             specifications: { 'Écran': '6,7" Super Retina XDR OLED' },
-            images: ['https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'],
+            images: ['/images/products/placeholder.jpg'],
             category: 'smartphones',
             in_stock: true,
             rating: 4.8,
@@ -123,9 +123,11 @@ export function FeaturedProducts() {
 
                 {/* Product Image */}
                 <div className="aspect-square relative overflow-hidden">
-                  <div 
+                  <div
+                    role="img"
+                    aria-label={product.name}
                     className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                    style={{ backgroundImage: `url(${product.images[0] || 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'})` }}
+                    style={{ backgroundImage: `url(${product.images[0] || '/images/products/placeholder.jpg'})` }}
                   />
                 </div>
               </div>

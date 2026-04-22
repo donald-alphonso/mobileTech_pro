@@ -45,7 +45,7 @@ export function ProductGrid({ filters }: ProductGridProps) {
             description: 'Le nouveau iPhone 15 Pro Max offre des performances exceptionnelles.',
             features: ['Écran Super Retina XDR 6,7"', 'Puce A17 Pro ultra-rapide'],
             specifications: { 'Écran': '6,7" Super Retina XDR OLED' },
-            images: ['https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'],
+            images: ['/images/products/placeholder.jpg'],
             category: 'smartphones',
             in_stock: true,
             rating: 4.8,
@@ -65,7 +65,7 @@ export function ProductGrid({ filters }: ProductGridProps) {
             description: 'Le Galaxy S24 Ultra redéfinit l\'excellence mobile.',
             features: ['Écran Dynamic AMOLED 2X 6,8"', 'S Pen intégré'],
             specifications: { 'Écran': '6,8" Dynamic AMOLED 2X' },
-            images: ['https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg'],
+            images: ['/images/products/placeholder.jpg'],
             category: 'smartphones',
             in_stock: true,
             rating: 4.7,
@@ -191,9 +191,11 @@ export function ProductGrid({ filters }: ProductGridProps) {
 
         {/* Product Image */}
         <div className={`relative overflow-hidden ${viewMode === 'list' ? 'h-full' : 'h-full'}`}>
-          <div 
+          <div
+            role="img"
+            aria-label={product.name}
             className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-            style={{ backgroundImage: `url(${product.images[0] || 'https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg'})` }}
+            style={{ backgroundImage: `url(${product.images[0] || '/images/products/placeholder.jpg'})` }}
           />
           {!product.in_stock && (
             <div className="absolute inset-0 bg-gray-500/50 flex items-center justify-center">

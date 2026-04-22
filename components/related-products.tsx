@@ -22,7 +22,7 @@ const MOCK_RELATED: Product[] = [
     description: '',
     features: [],
     specifications: {},
-    images: ['https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'],
+    images: ['/images/products/placeholder.jpg'],
     category: 'smartphones',
     in_stock: true,
     rating: 4.7,
@@ -42,7 +42,7 @@ const MOCK_RELATED: Product[] = [
     description: '',
     features: [],
     specifications: {},
-    images: ['https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg'],
+    images: ['/images/products/placeholder.jpg'],
     category: 'smartphones',
     in_stock: true,
     rating: 4.6,
@@ -62,7 +62,7 @@ const MOCK_RELATED: Product[] = [
     description: '',
     features: [],
     specifications: {},
-    images: ['https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg'],
+    images: ['/images/products/placeholder.jpg'],
     category: 'accessoires',
     in_stock: true,
     rating: 4.9,
@@ -165,8 +165,10 @@ export function RelatedProducts({ currentCategory, currentProductId }: RelatedPr
 
               <div className="aspect-square relative overflow-hidden">
                 <div
+                  role="img"
+                  aria-label={product.name}
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                  style={{ backgroundImage: `url(${product.images[0] || 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'})` }}
+                  style={{ backgroundImage: `url(${product.images[0] || '/images/products/placeholder.jpg'})` }}
                 />
               </div>
             </div>

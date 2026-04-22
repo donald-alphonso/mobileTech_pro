@@ -60,9 +60,9 @@ const getMockProduct = (slug: string) => {
         'Couleurs': 'Titane naturel, Titane bleu, Titane blanc, Titane noir'
       },
       images: [
-        'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-        'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg',
-        'https://images.pexels.com/photos/341523/pexels-photo-341523.jpeg'
+        '/images/products/placeholder.jpg',
+        '/images/products/placeholder.jpg',
+        '/images/products/placeholder.jpg'
       ]
     },
     'galaxy-s24-ultra': {
@@ -100,8 +100,8 @@ const getMockProduct = (slug: string) => {
         'Couleurs': 'Phantom Black, Phantom Violet, Phantom Yellow'
       },
       images: [
-        'https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg',
-        'https://images.pexels.com/photos/341523/pexels-photo-341523.jpeg'
+        '/images/products/placeholder.jpg',
+        '/images/products/placeholder.jpg'
       ]
     }
   };

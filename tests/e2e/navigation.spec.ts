@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { waitForReactHydration } from './helpers';
+import { waitForReactHydration, waitForFormHydration } from './helpers';
 
 test.describe('Navigation', () => {
   test('header search navigates to catalogue with query', async ({ page }) => {
     await page.goto('/');
-    await waitForReactHydration(page);
+    await waitForFormHydration(page, 'form:has(#nav-search)');
 
     const searchInput = page.locator('#nav-search');
     await searchInput.fill('iphone');

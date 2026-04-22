@@ -5,7 +5,7 @@ export function TeamSection() {
     {
       name: 'Pierre Dubois',
       role: 'Directeur Général',
-      image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg',
+      image: '/images/team/pierre-dubois.jpg',
       description: 'Expert en téléphonie mobile depuis 20 ans, Pierre a fondé MobileTech Pro avec la vision de démocratiser l\'accès aux dernières technologies.',
       email: 'pierre.dubois@mobiletech-pro.fr',
       linkedin: '#'
@@ -13,7 +13,7 @@ export function TeamSection() {
     {
       name: 'Sophie Martin',
       role: 'Responsable Commercial',
-      image: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg',
+      image: '/images/team/sophie-martin.jpg',
       description: 'Spécialisée dans le conseil client, Sophie vous aide à trouver le smartphone parfait adapté à vos besoins et votre budget.',
       email: 'sophie.martin@mobiletech-pro.fr',
       linkedin: '#'
@@ -21,7 +21,7 @@ export function TeamSection() {
     {
       name: 'Thomas Leroy',
       role: 'Expert Technique',
-      image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg',
+      image: '/images/team/thomas-leroy.jpg',
       description: 'Passionné de nouvelles technologies, Thomas assure le support technique et la formation de notre équipe sur les dernières innovations.',
       email: 'thomas.leroy@mobiletech-pro.fr',
       linkedin: '#'
@@ -29,7 +29,7 @@ export function TeamSection() {
     {
       name: 'Marie Rousseau',
       role: 'Service Client',
-      image: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg',
+      image: '/images/team/marie-rousseau.jpg',
       description: 'Marie garantit un service client exceptionnel et s\'assure que chaque client reparte satisfait de son expérience chez MobileTech Pro.',
       email: 'marie.rousseau@mobiletech-pro.fr',
       linkedin: '#'
@@ -55,7 +55,9 @@ export function TeamSection() {
               className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
             >
               <div className="aspect-square relative overflow-hidden">
-                <div 
+                <div
+                  role="img"
+                  aria-label={`Photo de ${member.name}, ${member.role}`}
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
                   style={{ backgroundImage: `url(${member.image})` }}
                 />

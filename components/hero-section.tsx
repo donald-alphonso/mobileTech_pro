@@ -14,21 +14,24 @@ export function HeroSection() {
       title: 'Découvrez les Derniers Smartphones',
       subtitle: 'iPhone 15, Samsung Galaxy S24, et plus encore',
       description: 'Profitez de nos conseils experts et trouvez le smartphone parfait pour vos besoins',
-      image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
+      image: '/images/hero/smartphones.jpg',
+      imageAlt: 'Smartphones dernière génération exposés sur fond sombre',
       cta: 'Voir le Catalogue'
     },
     {
       title: 'Accessoires Premium',
       subtitle: 'Protection et style pour votre mobile',
       description: 'Coques, écouteurs, chargeurs sans fil... Tout pour sublimer votre smartphone',
-      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
+      image: '/images/hero/accessoires.jpg',
+      imageAlt: 'Accessoires mobiles premium présentés en flat lay',
       cta: 'Découvrir'
     },
     {
       title: 'Service Expert & Personnalisé',
       subtitle: 'Conseil gratuit et accompagnement',
       description: 'Notre équipe d\'experts vous guide dans le choix de vos équipements mobiles',
-      image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg',
+      image: '/images/hero/service.jpg',
+      imageAlt: 'Équipe d\'experts mobile en boutique conseillant un client',
       cta: 'Nous Contacter'
     }
   ];
@@ -59,7 +62,9 @@ export function HeroSection() {
             }`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-blue-600/60 z-10" />
-            <div 
+            <div
+              role="img"
+              aria-label={slide.imageAlt}
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }}
             />

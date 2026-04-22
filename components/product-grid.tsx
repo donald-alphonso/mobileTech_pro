@@ -6,6 +6,7 @@ import { supabase, isSupabaseConfigured, type Product } from '@/lib/supabase';
 import { Star, Heart, Grid3x3 as Grid3X3, List, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { productPath } from '@/lib/routes';
 
 interface ProductGridProps {
   filters?: {
@@ -13,6 +14,7 @@ interface ProductGridProps {
     brands: string[];
     priceRange: number[];
     inStockOnly: boolean;
+    searchQuery?: string;
   };
 }
 
@@ -43,7 +45,7 @@ export function ProductGrid({ filters }: ProductGridProps) {
             description: 'Le nouveau iPhone 15 Pro Max offre des performances exceptionnelles.',
             features: ['Écran Super Retina XDR 6,7"', 'Puce A17 Pro ultra-rapide'],
             specifications: { 'Écran': '6,7" Super Retina XDR OLED' },
-            images: ['https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg'],
+            images: ['/images/products/placeholder.jpg'],
             category: 'smartphones',
             in_stock: true,
             rating: 4.8,
@@ -63,7 +65,7 @@ export function ProductGrid({ filters }: ProductGridProps) {
             description: 'Le Galaxy S24 Ultra redéfinit l\'excellence mobile.',
             features: ['Écran Dynamic AMOLED 2X 6,8"', 'S Pen intégré'],
             specifications: { 'Écran': '6,8" Dynamic AMOLED 2X' },
-            images: ['https://images.pexels.com/photos/1092644/pexels-photo-1092644.jpeg'],
+            images: ['/images/products/placeholder.jpg'],
             category: 'smartphones',
             in_stock: true,
             rating: 4.7,
@@ -126,6 +128,15 @@ export function ProductGrid({ filters }: ProductGridProps) {
       if (filters.inStockOnly) {
         filtered = filtered.filter(product => product.in_stock);
       }
+
+      // Filter by search query (name + brand)
+      const q = filters.searchQuery?.trim().toLowerCase();
+      if (q) {
+        filtered = filtered.filter(product =>
+          product.name.toLowerCase().includes(q) ||
+          product.brand.toLowerCase().includes(q)
+        );
+      }
     }
     
     // Sort the filtered products
@@ -180,9 +191,11 @@ export function ProductGrid({ filters }: ProductGridProps) {
 
         {/* Product Image */}
         <div className={`relative overflow-hidden ${viewMode === 'list' ? 'h-full' : 'h-full'}`}>
-          <div 
+          <div
+            role="img"
+            aria-label={product.name}
             className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-            style={{ backgroundImage: `url(${product.images[0] || 'https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg'})` }}
+            style={{ backgroundImage: `url(${product.images[0] || '/images/products/placeholder.jpg'})` }}
           />
           {!product.in_stock && (
             <div className="absolute inset-0 bg-gray-500/50 flex items-center justify-center">
@@ -220,12 +233,12 @@ export function ProductGrid({ filters }: ProductGridProps) {
           {/* Actions */}
           <div className={`flex gap-2 ${viewMode === 'list' ? 'ml-4' : ''}`}>
             <Button asChild variant="outline" size="sm" className="flex-1" disabled={!product.in_stock}>
-              <Link href={`/produit/${product.slug}`}>
+              <Link href={productPath(product.slug)}>
                 Voir Détails
               </Link>
             </Button>
             <Button asChild size="sm" className="flex-1" disabled={!product.in_stock}>
-              <Link href={`/produit/${product.slug}#contact`}>
+              <Link href={`${productPath(product.slug)}#contact`}>
                 Contact
               </Link>
             </Button>

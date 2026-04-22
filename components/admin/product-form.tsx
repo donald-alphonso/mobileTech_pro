@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase, type Product } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, type Product } from '@/lib/supabase';
 import { ArrowLeft, Save, Plus, X } from 'lucide-react';
 
 interface ProductFormProps {
@@ -72,6 +72,12 @@ export function ProductForm({ product, onSave, onCancel }: ProductFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSupabaseConfigured() || !supabase) {
+      console.warn('Supabase non configuré');
+      return;
+    }
+
     setIsLoading(true);
 
     try {

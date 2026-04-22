@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb';
+import { ROUTES } from '@/lib/routes';
 
 export const metadata = {
   title: 'Politique de Confidentialité - MobileTech Pro',
@@ -10,8 +11,8 @@ export default function PolitiqueConfidentialitePage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb items={[
-          { label: 'Accueil', href: '/' },
-          { label: 'Politique de Confidentialité', href: '/politique-confidentialite' }
+          { label: 'Accueil', href: ROUTES.home },
+          { label: 'Politique de Confidentialité', href: ROUTES.privacy }
         ]} />
 
         <div className="max-w-4xl mx-auto">

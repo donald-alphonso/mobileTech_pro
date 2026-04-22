@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -8,6 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { X, Filter } from 'lucide-react';
 
 interface ProductFiltersProps {
+  initialCategories?: string[];
   onFiltersChange?: (filters: {
     categories: string[];
     brands: string[];
@@ -16,28 +17,32 @@ interface ProductFiltersProps {
   }) => void;
 }
 
-export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
+export function ProductFilters({ initialCategories = [], onFiltersChange }: ProductFiltersProps) {
   const [priceRange, setPriceRange] = useState([0, 2000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    setSelectedCategories(initialCategories);
+  }, [initialCategories.join(',')]);
+
   const categories = [
-    { id: 'smartphones', name: 'Smartphones', count: 45 },
-    { id: 'ecouteurs', name: 'Écouteurs', count: 23 },
-    { id: 'coques', name: 'Coques & Protection', count: 67 },
-    { id: 'chargeurs', name: 'Chargeurs', count: 34 },
-    { id: 'accessoires', name: 'Autres Accessoires', count: 28 }
+    { id: 'smartphones', name: 'Smartphones', count: 0 },
+    { id: 'ecouteurs', name: 'Écouteurs', count: 0 },
+    { id: 'coques', name: 'Coques & Protection', count: 0 },
+    { id: 'chargeurs', name: 'Chargeurs', count: 0 },
+    { id: 'accessoires', name: 'Autres Accessoires', count: 0 }
   ];
 
   const brands = [
-    { id: 'apple', name: 'Apple', count: 34 },
-    { id: 'samsung', name: 'Samsung', count: 28 },
-    { id: 'huawei', name: 'Huawei', count: 15 },
-    { id: 'xiaomi', name: 'Xiaomi', count: 12 },
-    { id: 'oneplus', name: 'OnePlus', count: 8 },
-    { id: 'google', name: 'Google', count: 6 }
+    { id: 'apple', name: 'Apple', count: 0 },
+    { id: 'samsung', name: 'Samsung', count: 0 },
+    { id: 'huawei', name: 'Huawei', count: 0 },
+    { id: 'xiaomi', name: 'Xiaomi', count: 0 },
+    { id: 'oneplus', name: 'OnePlus', count: 0 },
+    { id: 'google', name: 'Google', count: 0 }
   ];
 
   const handleBrandChange = (brandId: string, checked: boolean) => {

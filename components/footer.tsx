@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Smartphone, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { ROUTES, catalogueWithCategory } from '@/lib/routes';
 
 export function Footer() {
   return (
@@ -36,10 +37,10 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Liens Rapides</h3>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="/" className="hover:text-white transition-colors">Accueil</Link></li>
-              <li><Link href="/catalogue" className="hover:text-white transition-colors">Catalogue</Link></li>
-              <li><Link href="/a-propos" className="hover:text-white transition-colors">À Propos</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href={ROUTES.home} className="hover:text-white transition-colors">Accueil</Link></li>
+              <li><Link href={ROUTES.catalogue} className="hover:text-white transition-colors">Catalogue</Link></li>
+              <li><Link href={ROUTES.about} className="hover:text-white transition-colors">À Propos</Link></li>
+              <li><Link href={ROUTES.contact} className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -47,11 +48,11 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-semibold text-lg">Nos Produits</h3>
             <ul className="space-y-2 text-sm text-gray-300">
-              <li><Link href="/catalogue?category=smartphones" className="hover:text-white transition-colors">Smartphones</Link></li>
-              <li><Link href="/catalogue?category=coques" className="hover:text-white transition-colors">Coques & Protection</Link></li>
-              <li><Link href="/catalogue?category=ecouteurs" className="hover:text-white transition-colors">Écouteurs</Link></li>
-              <li><Link href="/catalogue?category=chargeurs" className="hover:text-white transition-colors">Chargeurs</Link></li>
-              <li><Link href="/catalogue?category=accessoires" className="hover:text-white transition-colors">Accessoires</Link></li>
+              <li><Link href={catalogueWithCategory('smartphones')} className="hover:text-white transition-colors">Smartphones</Link></li>
+              <li><Link href={catalogueWithCategory('coques')} className="hover:text-white transition-colors">Coques & Protection</Link></li>
+              <li><Link href={catalogueWithCategory('ecouteurs')} className="hover:text-white transition-colors">Écouteurs</Link></li>
+              <li><Link href={catalogueWithCategory('chargeurs')} className="hover:text-white transition-colors">Chargeurs</Link></li>
+              <li><Link href={catalogueWithCategory('accessoires')} className="hover:text-white transition-colors">Accessoires</Link></li>
             </ul>
           </div>
 
@@ -83,9 +84,9 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
             <p>&copy; 2025 MobileTech Pro SARL. Tous droits réservés.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions Légales</Link>
-              <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Politique de Confidentialité</Link>
-              <Link href="/cgv" className="hover:text-white transition-colors">CGV</Link>
+              <Link href={ROUTES.legal} className="hover:text-white transition-colors">Mentions Légales</Link>
+              <Link href={ROUTES.privacy} className="hover:text-white transition-colors">Politique de Confidentialité</Link>
+              <Link href={ROUTES.cgv} className="hover:text-white transition-colors">CGV</Link>
             </div>
           </div>
           <div className="mt-4 pt-4 border-t border-gray-800 text-center text-xs text-gray-500">

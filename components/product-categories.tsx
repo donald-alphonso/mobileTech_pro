@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Smartphone, Headphones, Battery, Shield } from 'lucide-react';
+import { catalogueWithCategory } from '@/lib/routes';
 
 export function ProductCategories() {
   const categories = [
@@ -9,32 +10,32 @@ export function ProductCategories() {
       name: 'Smartphones',
       description: 'iPhone, Samsung, Huawei et plus',
       icon: Smartphone,
-      image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-      href: '/catalogue?category=smartphones',
+      image: '/images/categories/smartphones.jpg',
+      href: catalogueWithCategory('smartphones'),
       count: '150+ modèles'
     },
     {
       name: 'Écouteurs & Audio',
       description: 'AirPods, écouteurs sans fil',
       icon: Headphones,
-      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
-      href: '/catalogue?category=ecouteurs',
+      image: '/images/categories/ecouteurs.jpg',
+      href: catalogueWithCategory('ecouteurs'),
       count: '80+ références'
     },
     {
       name: 'Chargeurs & Batteries',
       description: 'Chargeurs rapides, batteries externes',
       icon: Battery,
-      image: 'https://images.pexels.com/photos/163117/phone-cell-phone-mobile-phone-163117.jpeg',
-      href: '/catalogue?category=chargeurs',
+      image: '/images/categories/chargeurs.jpg',
+      href: catalogueWithCategory('chargeurs'),
       count: '60+ produits'
     },
     {
       name: 'Protection & Coques',
       description: 'Coques, verres trempés, étuis',
       icon: Shield,
-      image: 'https://images.pexels.com/photos/1440722/pexels-photo-1440722.jpeg',
-      href: '/catalogue?category=protection',
+      image: '/images/categories/coques.jpg',
+      href: catalogueWithCategory('coques'),
       count: '200+ modèles'
     }
   ];
@@ -59,7 +60,9 @@ export function ProductCategories() {
               className="group relative overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <div className="aspect-w-16 aspect-h-9 relative h-48">
-                <div 
+                <div
+                  role="img"
+                  aria-label={category.name}
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
                   style={{ backgroundImage: `url(${category.image})` }}
                 />

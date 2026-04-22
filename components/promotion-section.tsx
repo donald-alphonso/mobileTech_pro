@@ -1,19 +1,25 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Clock, Percent, Gift, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ROUTES } from '@/lib/routes';
 
 export function PromotionSection() {
+  const [endDate] = useState<string>(() =>
+    new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+  );
+
   const promotions = [
     {
       id: 1,
       title: 'Offre Flash iPhone',
       description: 'Jusqu\'à 200€ de remise sur les iPhone 15',
       discount: '-200€',
-      image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-      endDate: '2025-02-15',
+      image: '/images/promotions/iphone-flash.jpg',
+      endDate,
       isFlash: true
     },
     {
@@ -21,8 +27,8 @@ export function PromotionSection() {
       title: 'Pack Accessoires',
       description: 'Coque + Verre trempé + Chargeur',
       discount: '-30%',
-      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg',
-      endDate: '2025-02-28',
+      image: '/images/promotions/pack-accessoires.jpg',
+      endDate,
       isFlash: false
     }
   ];
@@ -70,7 +76,9 @@ export function PromotionSection() {
               className="relative overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300 group"
             >
               <div className="absolute inset-0">
-                <div 
+                <div
+                  role="img"
+                  aria-label={promo.title}
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
                   style={{ backgroundImage: `url(${promo.image})` }}
                 />
@@ -129,7 +137,7 @@ export function PromotionSection() {
         {/* CTA */}
         <div className="text-center">
           <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-            <Link href="/catalogue">
+            <Link href={ROUTES.catalogue}>
               Voir Toutes les Promotions
             </Link>
           </Button>

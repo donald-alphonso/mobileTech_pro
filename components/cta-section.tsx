@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Phone, Mail, MessageCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/lib/routes';
 
 export function CTASection() {
   return (
@@ -41,7 +42,7 @@ export function CTASection() {
             <h3 className="text-lg font-semibold mb-2">Écrivez-nous</h3>
             <p className="text-gray-400 mb-4">Réponse sous 24h garantie</p>
             <Button asChild variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-600">
-              <Link href="/contact">
+              <Link href={ROUTES.contact}>
                 Formulaire de contact
               </Link>
             </Button>
@@ -55,7 +56,7 @@ export function CTASection() {
             <h3 className="text-lg font-semibold mb-2">Demande de rappel</h3>
             <p className="text-gray-400 mb-4">On vous rappelle gratuitement</p>
             <Button asChild variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-600">
-              <Link href="/contact">
+              <Link href={ROUTES.contact}>
                 Être rappelé
               </Link>
             </Button>
@@ -66,13 +67,13 @@ export function CTASection() {
         <div className="text-center">
           <div className="inline-flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
-              <Link href="/catalogue">
+              <Link href={ROUTES.catalogue}>
                 Découvrir Nos Produits
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-              <Link href="/contact">
+              <Link href={ROUTES.contact}>
                 Demander un Devis Personnalisé
               </Link>
             </Button>

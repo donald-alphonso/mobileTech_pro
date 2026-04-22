@@ -18,7 +18,7 @@ export function FeaturedProducts() {
 
   const fetchFeaturedProducts = async () => {
     try {
-      if (!isSupabaseConfigured()) {
+      if (!isSupabaseConfigured() || !supabase) {
         console.warn('Supabase not configured. Using mock data.');
         // Mock data for development when Supabase is not configured
         setProducts([

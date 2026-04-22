@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase, isSupabaseConfigured, type Lead } from '@/lib/supabase';
-import { Search, Mail, Phone, Eye, Calendar, Filter } from 'lucide-react';
+import { Search, Mail, Phone, Eye, Calendar, Filter, Users } from 'lucide-react';
 
 export function LeadsManager() {
   const [leads, setLeads] = useState<Lead[]>([]);

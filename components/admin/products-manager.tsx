@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase, isSupabaseConfigured, type Product } from '@/lib/supabase';
-import { Plus, Search, Edit, Trash2, Eye, Star } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Star, Package } from 'lucide-react';
 import { ProductForm } from './product-form';
 
 export function ProductsManager() {

@@ -71,7 +71,7 @@ const getMockProduct = (slug: string) => {
       brand: 'Samsung',
       category: 'smartphones',
       price: '1179€',
-      originalPrice: null,
+      originalPrice: undefined,
       inStock: true,
       rating: 4.7,
       reviews: 89,
@@ -110,7 +110,7 @@ const getMockProduct = (slug: string) => {
 };
 
 async function getProduct(slug: string) {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !supabase) {
     return getMockProduct(slug);
   }
 
@@ -132,7 +132,7 @@ async function getProduct(slug: string) {
       brand: data.brand,
       category: data.category,
       price: `${data.price}€`,
-      originalPrice: data.original_price ? `${data.original_price}€` : null,
+      originalPrice: data.original_price ? `${data.original_price}€` : undefined,
       inStock: data.in_stock,
       rating: data.rating,
       reviews: data.reviews_count,

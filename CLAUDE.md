@@ -305,3 +305,37 @@ await waitForFormHydration(page);  // vérifie form.onSubmit + tous les inputs.o
 - **Composant interactif nouveau** → ajouter `tests/unit/<composant>.test.tsx` (mock Supabase si besoin)
 - **Flux user-facing nouveau** → ajouter un test dans le bon fichier `tests/e2e/*.spec.ts`
 - **Politique RLS modifiée** → étendre `supabase/tests/rls.test.sql` avec un nouveau bloc `DO $$ ASSERT ... $$`
+
+---
+
+## Pièges récurrents (à connaître avant de toucher au code)
+
+### Tests
+
+1. **`vi.mock` est hoisté au-dessus des imports** — référencer une `const` déclarée à côté = `ReferenceError: Cannot access 'X' before initialization`. Toujours utiliser `vi.hoisted(() => ({ ... }))` pour les mocks.
+
+2. **Radix UI ne tourne pas dans jsdom sans polyfills** — `RadioGroup`, `Select`, `Dialog` plantent avec `ResizeObserver is not defined`, `hasPointerCapture is not a function`, etc. Polyfills déjà dans `vitest.setup.ts` — ajouter là si nouveau composant Radix utilisé dans un test.
+
+3. **Hydratation Playwright = piège silencieux** — un clic sur `<Button type="submit">` avant que React ait bound `onSubmit` = soumission HTML native (GET reload). Le test échoue avec un message style "success alert not visible" alors que la vraie cause est invisible. Toujours utiliser `waitForFormHydration(page)` du helper avant le premier clic submit.
+
+4. **Sélecteurs Testing Library : `Prénom` matche aussi "Nom"** — `getByLabelText(/Nom/i)` retourne 2 éléments car "préNOM" contient "Nom". Utiliser un anchor : `getByLabelText(/^Nom \*/i)`.
+
+5. **Messages de validation : préférer la chaîne exacte au regex** — `findByText(/au moins 2 caractères/i)` matche "Le **prénom** doit contenir au moins 2 caractères" ET "Le **nom** doit contenir au moins 2 caractères" → ambiguïté. Utiliser `findByText('Le prénom doit contenir au moins 2 caractères')` ou `.first()`.
+
+6. **Next dev + Playwright parallèle = flakiness** — Next compile chaque route au premier hit. Plusieurs workers Playwright qui hit le même dev server créent des courses de compilation HMR (formulaires vidés mid-soumission, hydratation incomplète). `playwright.config.ts` est en `workers: 1` pour cette raison.
+
+### Sécurité
+
+7. **Honey-pot doit rester silencieux** — ne JAMAIS rejeter le champ `website` au niveau Zod avec un message d'erreur visible (ex. `z.string().max(0, 'Spam détecté')`). Cela signale au bot qu'il a été détecté. Le rejet doit être silencieux dans `ContactForm.onSubmit` qui simule un succès complet (`setSubmitStatus('success')` + `reset()`).
+
+8. **Politiques RLS ne s'appliquent PAS au rôle `service_role`** — toujours tester avec `SET LOCAL ROLE anon` ou `authenticated`. Une requête depuis le SQL editor sans rôle explicite peut donner un faux positif.
+
+### Frontend
+
+9. **Toutes les images sont des URLs Pexels externes** — `hero-section.tsx`, `featured-products.tsx`, `product-categories.tsx` chargent des images depuis `images.pexels.com`. Si Pexels change/supprime ces URLs, le site se casse. À terme : héberger les images en local ou via Supabase Storage.
+
+10. **Pas de balises `<img>`, uniquement des `background-image` CSS** — donc aucun `alt` text. Mauvais pour l'accessibilité ET le SEO. À fixer pour un projet vraiment "présentable".
+
+11. **`output: 'export'` désactive les API routes et `next/image` optimisé** — `images.unoptimized: true` est obligatoire dans `next.config.js`. Pas de Server Actions, pas de Route Handlers dynamiques, pas de revalidation ISR. Tout est statique au build.
+
+12. **Pas de `public/` ni de favicon** — `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png` n'existent pas. Le navigateur affiche le favicon par défaut. À fixer avant toute mise en prod.

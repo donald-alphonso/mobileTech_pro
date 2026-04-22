@@ -39,3 +39,9 @@ next-env.d.ts
 /.claude/
 /.idea/
 /.vscode/
+
+# tests
+/coverage/
+/playwright-report/
+/test-results/
+/.playwright/

@@ -35,8 +35,9 @@ export const contactFormSchema = z.object({
     .max(5000, 'Message trop long (5000 caractères maximum)'),
   contact_method: z.enum(['email', 'phone', 'both']),
   product_name: z.string().trim().max(200).optional().or(z.literal('')),
-  // Honey-pot : doit toujours rester vide. Les bots remplissent les champs cachés.
-  website: z.string().max(0, 'Spam détecté').optional().or(z.literal('')),
+  // Honey-pot : accepte n'importe quelle valeur. Le rejet silencieux est dans
+  // ContactForm.onSubmit pour ne pas signaler aux bots qu'ils ont été détectés.
+  website: z.string().max(200).optional().or(z.literal('')),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
